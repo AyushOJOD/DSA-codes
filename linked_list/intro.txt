@@ -1,0 +1,5 @@
+Data needs not be stored in contigious location.
+
+One part contains data other contains refrence pointer
+
+We need a struct to create a data int and a point *next
