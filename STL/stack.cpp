@@ -1,8 +1,8 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(){
-
+int main()
+{
 
     // LAST IN FIRST OUT
     stack<int> st;
@@ -10,7 +10,7 @@ int main(){
     st.push(2); // {2, 1}
     st.push(3); // {3,2,1}
 
-    cout<<st.top(); // gives the last inserted value 
+    cout << st.top(); // gives the last inserted value
 
     st.pop();
 

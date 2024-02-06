@@ -1,0 +1,9 @@
+The Insert operation is called push() and delete is called pop();
+
+It is a linear data structure.
+
+isEmpty();
+push(x);
+pop();
+top(); -> returns the top item
+size();

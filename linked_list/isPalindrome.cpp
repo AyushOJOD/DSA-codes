@@ -12,25 +12,31 @@ struct Node
     }
 };
 
-Node *removeDuplicates(Node *head)
+bool isPalindrome(Node *head)
 {
     Node *curr = head;
-    int pos = 1;
-    unordered_map<*Node, int> mp;
+    Node *temp = head;
+    stack<int> s;
 
-    while (curr != NULL)
+    while (curr)
     {
-        if (mp.find(curr) != mp.end())
+        s.push(curr->data);
+        curr = curr->next;
+    }
+
+    while (temp)
+    {
+        if (st.top != temp->data)
         {
-            curr->next = curr->next->next;
+            return false;
         }
         else
         {
-            mp[curr] = pos;
-            pos++;
+            st.pop();
+            temp = temp->next;
         }
     }
-    return head;
+    return true;
 }
 
 int main()
@@ -39,11 +45,10 @@ int main()
     Node *head = new Node(10);
     Node *temp1 = new Node(20);
     Node *temp2 = new Node(30);
-    Node *temp3 = new Node(20);
+    Node *temp3 = new Node(40);
     head->next = temp1;
     temp1->next = temp2;
     temp2->next = temp3;
 
-    removeDuplicates(head);
     return 0;
 }

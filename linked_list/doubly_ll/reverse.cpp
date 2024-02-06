@@ -5,45 +5,43 @@ struct Node
 {
     int data;
     Node *next;
+    Node *prev;
     Node(int x)
     {
         data = x;
         next = NULL;
+        prev = NULL;
     }
 };
 
-Node *removeDuplicates(Node *head)
+Node *reverseDLL(Node *head)
 {
+    if (head == NULL || head->next == NULL)
+    {
+        return head;
+    }
     Node *curr = head;
-    int pos = 1;
-    unordered_map<*Node, int> mp;
+    Node *prev = NULL;
 
     while (curr != NULL)
     {
-        if (mp.find(curr) != mp.end())
-        {
-            curr->next = curr->next->next;
-        }
-        else
-        {
-            mp[curr] = pos;
-            pos++;
-        }
+        prev = curr->prev;
+        curr->prev = curr->next;
+        curr->next = prev;
+        curr = curr->prev;
     }
-    return head;
+    return prev->prev;
 }
-
 int main()
 {
 
     Node *head = new Node(10);
     Node *temp1 = new Node(20);
     Node *temp2 = new Node(30);
-    Node *temp3 = new Node(20);
     head->next = temp1;
+    temp1->prev = head;
     temp1->next = temp2;
-    temp2->next = temp3;
+    temp2->prev = temp1;
 
-    removeDuplicates(head);
     return 0;
 }

@@ -1,0 +1,4 @@
+Queue follows a LILO approach;
+
+enqueue();
+dequeue();
