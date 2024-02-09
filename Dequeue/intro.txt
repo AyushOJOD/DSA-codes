@@ -1,0 +1,3 @@
+Insertion and deletion from both ends
+
+We use doubly linked list
