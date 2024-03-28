@@ -1,60 +1,25 @@
-#include <iostream>
-#include <vector>
-using namespace std;
-
-vector<vector<int>> tree;
-vector<int> nums;
-int k;
-
-void dfs(int node, int parent, vector<int> &xorVals, long long &result)
+int countSubmatrices(vector<vector<int>> &grid, int target)
 {
-    xorVals[node] = (parent == -1) ? nums[node] : (xorVals[parent] ^ nums[node]);
-    result += xorVals[node];
-    for (int child : tree[node])
+    int res = 0, rows = grid.size(), cols = grid[0].size();
+
+    for (int row = 0; row < rows; row++)
     {
-        if (child != parent)
+        for (int col = 1; col < cols; col++)
         {
-            dfs(child, node, xorVals, result);
+            grid[row][col] += grid[row][col - 1];
         }
     }
-}
 
-long long maxSum(int n)
-{
-    vector<int> xorVals(n, 0);
-    long long result = 0;
-    dfs(0, -1, xorVals, result);
-    long long maxResult = 0;
-    for (int i = 0; i < n; ++i)
+    for (int col = 0; col < cols; col++)
     {
-        maxResult = max(maxResult, result - xorVals[i] + (xorVals[i] ^ k));
-    }
-    return maxResult;
-}
-
-int main()
-{
-    int n;
-    cin >> n;
-    tree.resize(n);
-    nums.resize(n);
-
-    for (int i = 0; i < n - 1; ++i)
-    {
-        int u, v;
-        cin >> u >> v;
-        tree[u].push_back(v);
-        tree[v].push_back(u);
+        int add = 0;
+        for (int row = 0; row < rows; row++)
+        {
+            add += grid[row][col];
+            if (add <= target)
+                res++;
+        }
     }
 
-    cin >> k;
-
-    for (int i = 0; i < n; ++i)
-    {
-        cin >> nums[i];
-    }
-
-    cout << maxSum(n) << endl;
-
-    return 0;
+    return res;
 }
