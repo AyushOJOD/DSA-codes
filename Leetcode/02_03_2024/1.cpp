@@ -1,30 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int minOperations(vector<int> &nums, int k)
+int minimumDistance(vector<vector<int>> &points)
 {
-    priority_queue<long long, vector<long long>, greater<long long>> pq;
-
-    for (int i = 0; i < nums.size(); i++)
+    int n = points.size();
+    int t = 0;
+    vector<int> res;
+    while (t < n)
     {
-        pq.push(nums[i]);
+        swap(points[t], points[n - 1]);
+        int minsum, maxsum, mindiff, maxdiff;
+
+        minsum = maxsum = points[0][0] + points[0][1];
+        mindiff = maxdiff = points[0][0] - points[0][1];
+        for (int i = 1; i < n - 1; i++)
+        {
+            int sum = points[i][0] + points[i][1];
+            int diff = points[i][0] - points[i][1];
+            if (sum < minsum)
+                minsum = sum;
+            else if (sum > maxsum)
+                maxsum = sum;
+            if (diff < mindiff)
+                mindiff = diff;
+            else if (diff > maxdiff)
+                maxdiff = diff;
+        }
+
+        int maximum = max(maxsum - minsum, maxdiff - mindiff);
+        res.push_back(maximum);
+        swap(points[t], points[n - 1]);
+        t++;
     }
-
-    int res = 0;
-
-    while (pq.top() < k)
-    {
-        long long first = pq.top();
-        pq.pop();
-        long long second = pq.top();
-        pq.pop();
-
-        pq.push((2 * first) + second);
-
-        res++;
-    }
-
-    return res;
+    sort(res.begin(), res.end());
+    return res[0];
 }
 
 int main()
