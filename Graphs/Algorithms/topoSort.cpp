@@ -43,10 +43,6 @@ vector<int> topoSort(int V, vector<int> adj[])
     return topo;
 }
 
-vector<int> topoSortDFS(int V, vector<int> adj[]){
-    
-}
-
 int main()
 {
 
