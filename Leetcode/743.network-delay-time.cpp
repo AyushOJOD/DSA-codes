@@ -3,41 +3,6 @@ using namespace std;
 
 vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
 {
-    // Code here
-    set<pair<int, int>> st;
-    vector<int> dist(V, 1e9);
-
-    st.insert({0, S});
-    dist[S] = 0;
-
-    while (!st.empty())
-    {
-        auto it = *(st.begin());
-        int weight = it.first;
-        int node = it.second;
-        st.erase(it);
-
-        for (auto i : adj[node])
-        {
-            int adjNode = i[0];
-            int edgeWeight = i[1];
-
-            if (weight + edgeWeight < dist[adjNode])
-            {
-                if (dist[adjNode] != 1e9)
-                {
-                    st.erase({dist[adjNode], adjNode});
-                }
-                dist[adjNode] = weight + edgeWeight;
-                st.insert({dist[adjNode], adjNode});
-            }
-        }
-    }
-    return dist;
-}
-
-vector<int> dijkstraPQ(int V, vector<vector<int>> adj[], int S)
-{
 
     // We store the {distance, node} in the priority queue
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
@@ -69,6 +34,22 @@ vector<int> dijkstraPQ(int V, vector<vector<int>> adj[], int S)
     }
 
     return dist;
+}
+
+int networkDelayTime(vector<vector<int>> &times, int n, int k)
+{
+    vector<vector<int>> adj[n];
+
+    for (auto i : times)
+    {
+        adj[i[0]].push_back({i[1], i[2]});
+    }
+
+    vector<int> dist = dijkstra(n, adj, k);
+
+    int ans = *max_element(dist.begin(), dist.end());
+
+    return ans == 1e9 ? -1 : ans;
 }
 
 int main()
