@@ -1,19 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void dfs(vector<int> &nums, int idx, vector<int> &temp, vector<vector<int>> &res)
+{
+
+    res.push_back(temp);
+
+    for (int i = idx; i < nums.size(); i++)
+    {
+        temp.push_back(nums[i]);     // added
+        dfs(nums, i + 1, temp, res); // dfs for next level
+        temp.pop_back();             // remove(backtrack)
+    }
+}
+
 vector<vector<int>> subsets(vector<int> &nums)
 {
-    set<vector<int>> sub;
+    vector<int> temp;
+    vector<vector<int>> res;
 
-    vector<int> temp = {};
+    dfs(nums, 0, temp, res);
 
-    sub.insert(temp);
-
-    for (int i = 0; i < nums.size(); i++)
-    {
-        vector<int> temp1 = temp.push_back(nums[i] + 1);
-        vector<int> temp2 = temp;
-    }
+    return res;
 }
 
 int main()

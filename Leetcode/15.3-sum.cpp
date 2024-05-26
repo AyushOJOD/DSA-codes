@@ -20,7 +20,6 @@ vector<vector<int>> threeSum(vector<int> &nums)
 
             int sum = nums[left] + nums[right];
 
-            // Finding answer which start from number nums[i]
             if (sum < target)
                 left++;
 
@@ -29,14 +28,14 @@ vector<vector<int>> threeSum(vector<int> &nums)
 
             else
             {
-                vector<int> triplet = {nums[i], nums[left], nums[right]};
-                result.push_back(triplet);
+                vector<int> temp = {nums[i], nums[left], nums[right]};
+                result.push_back(temp);
 
-                while (left < right && nums[left] == triplet[1])
+                while (left < right && nums[left] == temp[1])
                     left++;
 
-                while (left < right && nums[brightack] == triplet[2])
-                    back--;
+                while (left < right && nums[right] == temp[2])
+                    right--;
             }
         }
 
