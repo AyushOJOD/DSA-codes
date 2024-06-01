@@ -1,19 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Node
+struct ListNode
 {
-    int data;
-    Node *next;
-    Node(int x)
+    int val;
+    ListNode *next;
+    ListNode(int x)
     {
-        data = x;
+        val = x;
         next = NULL;
     }
 };
 
-Node *rotateRight(Node *head, int k)
+ListNode *rotateRight(ListNode *head, int k)
 {
+
+    if (!head || k == 0 || !head->next)
+    {
+        return head;
+    }
+
+    ListNode *curr = head;
+    int len = 1;
+
+    while (curr->next)
+    {
+        curr = curr->next;
+        len++;
+    }
+
+    curr->next = head;
+
+    k = k % len;
+    int newLen = len - k;
+    curr = head;
+
+    for (int i = 0; i < newLen - 1; i++)
+    {
+        curr = curr->next;
+    }
+
+    head = curr->next;
+    curr->next = NULL;
+    return head;
 }
 
 int main()
