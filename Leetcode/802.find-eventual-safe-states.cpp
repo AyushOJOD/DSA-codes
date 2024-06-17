@@ -1,57 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool dfsCheck(int node, vector<int> adj[], int vis[], int pathVis[], int check[])
-{
-    vis[node] = 1;
-    pathVis[node] = 1;
-    check[node] = 0;
-
-    for (auto it : adj[node])
-    {
-        if (!vis[it])
-        {
-            if (dfsCheck(it, adj, vis, pathVis, check))
-            {
-                return true;
-            }
-            else if (pathVis[it])
-            {
-                return true;
-            }
-        }
-    }
-
-    check[node] = 1;
-    pathVis[node] = 0;
-    return false;
-}
-
 vector<int> eventualSafeNodes(vector<vector<int>> &graph)
 {
     int V = graph.size();
 
-    vector<int> vis(V, 0);
-    vector<int> pathVis(V, 0);
-    vector<int> check(V, 0);
+    vector<vector<int>> adjRev(V);
+    vector<int> inDegree(V, 0);
 
+    for (int i = 0; i < V; i++)
+    {
+        for (auto it : graph[i])
+        {
+            adjRev[it].push_back(i);
+            inDegree[i]++;
+        }
+    }
+
+    queue<int> q;
     vector<int> safeNodes;
 
     for (int i = 0; i < V; i++)
     {
-        if (!vis[i])
+        if (inDegree[i] == 0)
         {
-            dfsCheck(i, adj, vis, pathVis, check);
+            q.push(i);
         }
     }
 
-    for (int i = 0; i < V; i++)
+    while (!q.empty())
     {
-        if (check[i])
+        int node = q.front();
+        q.pop();
+        safeNodes.push_back(node);
+
+        for (auto it : adjRev[node])
         {
-            safeNodes.push_back(i);
+            inDegree[it]--;
+            if (inDegree[it] == 0)
+            {
+                q.push(it);
+            }
         }
     }
+
+    sort(safeNodes.begin(), safeNodes.end());
 
     return safeNodes;
 }

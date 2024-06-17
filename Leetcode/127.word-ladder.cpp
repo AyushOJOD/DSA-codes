@@ -4,15 +4,12 @@ using namespace std;
 int ladderLength(string beginWord, string endWord, vector<string> &wordList)
 {
 
-    int len = beginWord.length();
-    queue<pair<string, int>> q;
-    q.push({beginWord, 1});
-    unordered_set<string> st(wordList.begin(), wordList.end());
+    // intizalize the set and q
+    queue<pair<string, int>> q; // {word, level}
+    unordered_set<string> s(wordList.begin(), wordList.end());
 
-    if (st.find(beginWord) != st.end())
-    {
-        st.erase(beginWord);
-    }
+    q.push({beginWord, 1});
+    s.erase(beginWord);
 
     while (!q.empty())
     {
@@ -20,24 +17,24 @@ int ladderLength(string beginWord, string endWord, vector<string> &wordList)
         int level = q.front().second;
         q.pop();
 
-        if (word == targetWord)
-            return level;
-
-        for (int i = 0; i < len; i++)
+        if (word == endWord)
         {
-            char letter = word[i];
+            return level;
+        }
 
-            for (char c = 'a'; c <= 'z'; c++)
+        for (int i = 0; i < word.size(); i++)
+        {
+            char original = word[i];
+            for (char ch = 'a'; ch <= 'z'; ch++)
             {
-                word[i] = c;
-                if (st.find(word) != st.end())
+                word[i] = ch;
+                if (s.find(word) != s.end())
                 {
-                    st.erase(word);
                     q.push({word, level + 1});
+                    s.erase(word);
                 }
             }
-
-            word[i] = letter;
+            word[i] = original;
         }
     }
 

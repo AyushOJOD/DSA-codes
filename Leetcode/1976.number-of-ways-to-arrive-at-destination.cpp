@@ -3,48 +3,50 @@ using namespace std;
 
 int countPaths(int n, vector<vector<int>> &roads)
 {
+    int mod = 1000000007;
+
     vector<pair<int, int>> adj[n];
+
     for (auto it : roads)
     {
         adj[it[0]].push_back({it[1], it[2]});
         adj[it[1]].push_back({it[0], it[2]});
     }
 
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; //{dis, node}
 
-    vector<int> dist(n, 1e9), ways(n, 0);
+    vector<int> dist(n, 1e9);
+    vector<int> path(n, 0);
+
     dist[0] = 0;
-    ways[0] = 1;
+    path[0] = 1;
     pq.push({0, 0});
-
-    int mod = (int)(1e9 + 7);
 
     while (!pq.empty())
     {
-        auto it = pq.top();
-        int dis = it.first;
-        int node = it.second;
+        int node = pq.top().second;
+        int dis = pq.top().first;
         pq.pop();
 
-        for (auto iter : adj[node])
+        for (auto it : adj[node])
         {
-            int adjNode = iter.first;
-            int adjDis = iter.second;
+            int adjNode = it.first;
+            int edgeWt = it.second;
 
-            if (dis + adjDis < dist[adjNode])
+            if (dist[adjNode] > dis + edgeWt)
             {
-                dist[adjNode] = dis + adjNode;
-                pq.push({dis + adjDis, adjNode});
-                ways[adjNode] = ways[node];
+                dist[adjNode] = dis + edgeWt;
+                pq.push({dis + edgeWt, adjNode});
+                path[adjNode] = path[node];
             }
-            else if (dis + adjDis == dist[adjNode])
+            else if (dis + edgeWt == dist[adjNode])
             {
-                ways[adjNode] = (ways[node] + ways[adjNode]) % mod;
+                path[adjNode] = (path[adjNode] + path[node]) % mod;
             }
         }
     }
 
-    return ways[n - 1] % mod;
+    return path[n - 1] % mod;
 }
 
 int main()

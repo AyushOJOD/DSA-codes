@@ -52,27 +52,34 @@ public:
 vector<vector<string>> accountsMerge(vector<vector<string>> &accounts)
 {
     int n = accounts.size();
-    unordered_map<string, int> emailToIndex;
+
     DisjointSet ds(n);
+
+    // add the value to map and use ds
+    unordered_map<string, int> accountMap;
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = 1; j < n; j++)
+        for (int j = 1; j < accounts[i].size(); j++)
         {
-            if (emailToIndex.find(accounts[i][j]) == emailToIndex.end())
+            string currAccount = accounts[i][j];
+
+            if (accountMap.find(currAccount) == accountMap.end())
             {
-                emailToIndex[accounts[i][j]] = i;
+                accountMap[currAccount] = i;
             }
             else
             {
-                ds.unionByRank(i, emailToIndex[accounts[i][j]]);
+                ds.unionByRank(i, accountMap[currAccount]);
             }
         }
     }
 
+    // storing the data in required format
+
     vector<string> mergedMail[n];
 
-    for (auto it : emailToIndex)
+    for (auto it : accountMap)
     {
         string mail = it.first;
         int node = ds.findUPar(it.second);
@@ -80,12 +87,15 @@ vector<vector<string>> accountsMerge(vector<vector<string>> &accounts)
         mergedMail[node].push_back(mail);
     }
 
-    vector<vector<string>> res;
+    // get the result
+    vector<vector<string>> result;
 
     for (int i = 0; i < n; i++)
     {
         if (mergedMail[i].size() == 0)
+        {
             continue;
+        }
 
         sort(mergedMail[i].begin(), mergedMail[i].end());
         vector<string> temp;
@@ -96,10 +106,9 @@ vector<vector<string>> accountsMerge(vector<vector<string>> &accounts)
         {
             temp.push_back(it);
         }
-        res.push_back(temp);
+        result.push_back(temp);
     }
-
-    return res;
+    return result;
 }
 
 int main()

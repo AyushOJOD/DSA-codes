@@ -3,12 +3,11 @@ using namespace std;
 
 class DisjointSet
 {
-    vector<int> parent, rank, size;
+    vector<int> parent, size;
 
 public:
     DisjointSet(int n)
     {
-        rank.resize(n + 1, 0);
         parent.resize(n + 1);
         size.resize(n + 1, 1);
 
@@ -25,31 +24,6 @@ public:
             return node;
         }
         return parent[node] = findUPar(parent[node]);
-    }
-
-    void unionByrank(int u, int v)
-    {
-        int ulp_u = findUPar(u);
-        int ulp_v = findUPar(v);
-
-        if (ulp_u == ulp_v)
-        {
-            return; // Both belong to same component
-        }
-
-        if (rank[ulp_u] < rank[ulp_v])
-        {
-            parent[ulp_u] = ulp_v;
-        }
-        else if (rank[ulp_u] > rank[ulp_v])
-        {
-            parent[ulp_v] = ulp_u;
-        }
-        else
-        {
-            parent[ulp_u] = ulp_v;
-            rank[ulp_v]++;
-        }
     }
 
     void unionBySize(int u, int v)
@@ -75,25 +49,47 @@ public:
     }
 };
 
+int removeStones(vector<vector<int>> &stones)
+{
+    int n = stones.size();
+
+    int maxRow = 0;
+    int maxCol = 0;
+
+    for (auto it : stones)
+    {
+        maxRow = max(it[0], maxRow);
+        maxCol = max(it[1], maxCol);
+    }
+
+    DisjointSet ds(maxRow + maxCol + 1);
+
+    unordered_map<int, int> stoneNodes;
+
+    for (auto it : stones)
+    {
+        int nodeRow = it[0];
+        int nodeCol = it[1] + maxRow + 1;
+
+        ds.unionBySize(nodeRow, nodeCol);
+        stoneNodes[nodeRow] = 1;
+        stoneNodes[nodeCol] = 1;
+    }
+
+    int cnt = 0;
+    for (auto it : stoneNodes)
+    {
+        if (ds.findUPar(it.first) == it.first)
+        {
+            cnt++;
+        }
+    }
+
+    return n - cnt;
+}
+
 int main()
 {
-
-    DisjointSet ds(7);
-
-    ds.unionByrank(1, 2);
-    ds.unionByrank(2, 3);
-    ds.unionByrank(4, 5);
-    ds.unionByrank(6, 7);
-    ds.unionByrank(5, 6);
-
-    if (ds.findUPar(3) == ds.findUPar(7))
-    {
-        cout << "Same" << endl;
-    }
-    else
-    {
-        cout << "Not Same" << endl;
-    }
 
     return 0;
 }

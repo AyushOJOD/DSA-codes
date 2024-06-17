@@ -1,55 +1,55 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+int networkDelayTime(vector<vector<int>> &times, int n, int k)
 {
+    vector<vector<pair<int, int>>> adj(n + 1);
 
-    // We store the {distance, node} in the priority queue
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    for (auto it : times)
+    {
+        int src = it[0];
+        int end = it[1];
+        int wt = it[2];
+        adj[src].push_back({end, wt});
+    }
 
-    vector<int> dist(V, 1e9);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // {dis, node}
 
-    dist[S] = 0;
-    pq.push({0, S});
+    vector<int> dist(n + 1, 1e9);
+
+    dist[k] = 0;
+    pq.push({0, k});
 
     while (!pq.empty())
     {
-        auto it = pq.top();
-        int node = it.second;
-        int wt = it.first;
-
+        int dis = pq.top().first;
+        int node = pq.top().second;
         pq.pop();
 
-        for (auto iter : adj[node])
+        for (auto it : adj[node])
         {
-            int adjNode = iter[0];
-            int edgeWeight = iter[1];
+            int adjNode = it.first;
+            int edgeWt = it.second;
 
-            if (wt + edgeWeight < dist[adjNode])
+            if (dist[adjNode] > edgeWt + dis)
             {
-                dist[adjNode] = wt + edgeWeight;
-                pq.push({dist[adjNode], adjNode});
+                dist[adjNode] = edgeWt + dis;
+                pq.push({edgeWt + dis, adjNode});
             }
         }
     }
 
-    return dist;
-}
-
-int networkDelayTime(vector<vector<int>> &times, int n, int k)
-{
-    vector<vector<int>> adj[n];
-
-    for (auto i : times)
+    int maxDist = 0;
+    for (int i = 1; i <= n; i++)
     {
-        adj[i[0]].push_back({i[1], i[2]});
+        if (dist[i] == 1e9)
+        {
+            return -1; // If there's any node that is unreachable
+        }
+        maxDist = max(maxDist, dist[i]);
     }
 
-    vector<int> dist = dijkstra(n, adj, k);
-
-    int ans = *max_element(dist.begin(), dist.end());
-
-    return ans == 1e9 ? -1 : ans;
+    return maxDist;
 }
 
 int main()
