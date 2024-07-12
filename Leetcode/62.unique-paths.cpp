@@ -1,37 +1,36 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int func(int m, int n, vector<vector<int>> &dp)
+class Solution
 {
-
-    // Base case
-    if (m == 0 && n == 0)
+private:
+    int helper(int row, int col)
     {
-        return 1;
+        if (row = 0 && col == 0)
+        {
+            return 1;
+        }
+
+        if (row < 0 || col < 0)
+        {
+            return 0;
+        }
+
+        // go up
+        int up = helper(row - 1, col);
+
+        // go left
+        int left = helper(row, col - 1);
+
+        return left + up;
     }
 
-    if (m < 0 || n < 0)
+public:
+    int uniquePaths(int m, int n)
     {
-        return 0;
+        return helper(m - 1, n - 1);
     }
-
-    if (dp[m][n] != -1)
-    {
-        return dp[m][n];
-    }
-
-    int left = func(m, n - 1, dp);
-    int right = func(m - 1, n, dp);
-
-    return dp[m][n] = left + right;
-}
-
-int uniquePaths(int m, int n)
-{
-    vector<vector<int>> dp(m, vector<int>(n, -1));
-
-    return func(m - 1, n - 1, dp);
-}
+};
 
 int main()
 {

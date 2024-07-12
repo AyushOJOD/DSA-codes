@@ -1,44 +1,95 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int helper(vector<vector<int>> &matrix, int n, int i, int j, vector<vector<int>> &dp)
+// For every value in the bottom you have only one possible answer
+class Solution
 {
-    // Base case: if we're out of bounds
-    if (i < 0 || j < 0 || j >= n)
+
+private:
+    bool isValid(int row, int col, int m, int n)
     {
-        return 1e9;
+        return (row >= 0 && row < n && col >= 0 && col < m);
     }
 
-    // Base case: if we're at the top row, return ,the matrix value
-    if (i == 0)
+    int helper(vector<vector<int>> &matrix, int row, int col, int m, int n, vector<vector<int>> &dp)
     {
-        return matrix[i][j];
+        // base case
+        if (row == 0)
+        {
+            return matrix[row][col];
+        }
+
+        if (dp[row][col] != -1)
+        {
+            return dp[row][col];
+        }
+
+        // recursion
+        int up = INT_MAX, rightDiag = INT_MAX, leftDiag = INT_MAX;
+
+        up = matrix[row][col] + helper(matrix, row - 1, col, m, n, dp);
+
+        if (isValid(row - 1, col + 1, n, m))
+        {
+            rightDiag = matrix[row][col] + helper(matrix, row - 1, col + 1, m, n, dp);
+        }
+
+        if (isValid(row - 1, col - 1, m, n))
+        {
+            leftDiag = matrix[row][col] + helper(matrix, row - 1, col - 1, m, n, dp);
+        }
+
+        return dp[row][col] = min(up, min(rightDiag, leftDiag));
     }
 
-    if (dp[i][j] != -1)
+public:
+    int minFallingPathSum(vector<vector<int>> &matrix)
     {
-        return dp[i][j];
+        int n = matrix.size();
+        int m = matrix[0].size();
+
+        vector<int> prev(m + 1, 0);
+        vector<int> curr(m + 1, 0);
+
+        // base case
+        for (int col = 0; col < m; col++)
+        {
+            prev[col] = matrix[0][col];
+        }
+
+        for (int row = 1; row < n; row++)
+        {
+            for (int col = 0; col < m; col++)
+            {
+                int up = INT_MAX, rightDiag = INT_MAX, leftDiag = INT_MAX;
+
+                up = matrix[row][col] + prev[col];
+
+                if (isValid(row - 1, col + 1, n, m))
+                {
+                    rightDiag = matrix[row][col] + prev[col + 1];
+                }
+
+                if (isValid(row - 1, col - 1, m, n))
+                {
+                    leftDiag = matrix[row][col] + prev[col - 1];
+                }
+
+                curr[col] = min(up, min(rightDiag, leftDiag));
+            }
+            prev = curr;
+        }
+
+        int minValue = INT_MAX;
+
+        for (int i = 0; i < m; i++)
+        {
+            minValue = min(minValue, prev[i]);
+        }
+
+        return minValue;
     }
-
-    // Recursive case: calculate the minimum path sum of the three possible paths
-    int topL = matrix[i][j] + helper(matrix, n, i - 1, j - 1, dp);
-    int topR = matrix[i][j] + helper(matrix, n, i - 1, j + 1, dp);
-    int top = matrix[i][j] + helper(matrix, n, i - 1, j, dp);
-
-    // Return the current cell value plus the minimum of the three paths
-    return dp[i][j] = min(top, min(topL, topR));
-}
-
-int minFallingPathSum(vector<vector<int>> &matrix)
-{
-    int n = matrix.size();
-
-    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
-
-    for (int j = 0; j < m; j++)
-    {
-    }
-}
+};
 
 int main()
 {

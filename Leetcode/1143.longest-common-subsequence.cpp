@@ -4,32 +4,35 @@ using namespace std;
 class Solution
 {
 private:
-    int helper(string s1, string s2, int i, int j)
+    int helper(string s, string t, int sIdx, int tIdx, vector<vector<int>> &dp)
     {
-        // Base case
-        if (i < 0 || j < 0)
+        if (sIdx < 0 || tIdx < 0)
         {
             return 0;
         }
 
-        if (s1[i] == s2[j])
+        if (dp[sIdx][tIdx] != -1)
         {
-            return 1 + helper(s1, s2, i - 1, j - 1);
+            return dp[sIdx][tIdx];
         }
 
-        return max(helper(s1, s2, i - 1, j), helper(s1, s2, i, j - 1));
+        if (s[sIdx] == t[tIdx])
+        {
+            return dp[sIdx][tIdx] = 1 + helper(s, t, sIdx - 1, tIdx - 1);
+        }
+
+        return dp[sIdx][tIdx] = max(helper(s, t, sIdx - 1, tIdx), helper(s, t, sIdx, tIdx - 1));
     }
 
 public:
     int longestCommonSubsequence(string text1, string text2)
     {
 
-        return helper(text1, text2, text1.length() - 1, text2.length() - 1);
+        vector<vector<int>> dp(text1.length() + 1, vector<int>(text2.length() + 1, 0));
     }
-}
+};
 
-int
-main()
+int main()
 {
 
     return 0;
