@@ -1,53 +1,60 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int k)
+class Solution
 {
-    vector<pair<int, int>> adj[n];
-    for (auto it : flights)
+public:
+    int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int k)
     {
-        adj[it[0]].push_back({it[1], it[2]}); // {end, price]}
-    }
+        vector<pair<int, int>> adj[n];
 
-    queue<pair<int, pair<int, int>>> q; // {stops, {node, price}}
-
-    vector<int> cost(n + 1, 1e9);
-
-    q.push({0, {src, 0}});
-    cost[src] = 0;
-
-    while (!q.empty())
-    {
-        int stops = q.front().first;
-        int node = q.front().second.first;
-        int price = q.front().second.second;
-        q.pop();
-
-        if (stops > k)
+        for (auto it : flights)
         {
-            continue;
+            adj[it[0]].push_back({it[1], it[2]});
         }
 
-        for (auto it : adj[node])
-        {
-            int destination = it.first;
-            int kharcha = it.second;
+        queue<pair<int, pair<int, int>>> q; //{stops, {node, cost}}
 
-            if (cost[destination] > kharcha + price)
+        vector<int> cost(n + 1, 1e9);
+
+        q.push({0, {src, 0}});
+        cost[src] = 0;
+
+        while (!q.empty())
+        {
+            auto it = q.front();
+            q.pop();
+
+            int stops = it.first;
+            int node = it.second.first;
+            int cost = it.second.second;
+
+            if (stops > k)
             {
-                cost[destination] = kharcha + price;
-                q.push({stops + 1, {destination, kharcha + price}});
+                continue;
+            }
+
+            for (auto it : adj[node])
+            {
+                int kharcha = it[1];
+                int adjNode = it[0];
+
+                if (cost[adjNode] > cost + kharcha)
+                {
+                    cost[adjNode] = cost + kharcha;
+                    q.push({stops + 1, {adjNode, cost + kharcha}});
+                }
             }
         }
-    }
 
-    if (cost[dst] == 1e9)
-    {
-        return -1;
-    }
+        if (cost[dst] == 1e9)
+        {
+            return -1;
+        }
 
-    return cost[dst];
-}
+        return cost[dst];
+    }
+};
 
 int main()
 {
