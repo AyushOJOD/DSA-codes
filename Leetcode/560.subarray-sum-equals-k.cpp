@@ -1,27 +1,24 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+int helper(vector<int> &nums, int k)
+{
+    int left = 0, right = 0, currSum = 0;
+
+    while (right < nums.size())
+    {
+        currSum += nums[right];
+
+        if (currSum > k)
+        {
+            currSum -= nums[left];
+            left++;
+        }
+    }
+}
+
 int subarraySum(vector<int> &nums, int k)
 {
-    int sum = 0, cnt = 0;
-    unordered_map<int, int> mp;
-
-    for (int i = 0; i < nums.size(); i++)
-    {
-        sum += nums[i];
-
-        if (sum == k)
-            cnt++;
-
-        if (mp.find(sum - k) != mp.end())
-        {
-            cnt += mp[sum - k];
-        }
-
-        mp[sum]++;
-    }
-
-    return cnt;
 }
 
 int main()
