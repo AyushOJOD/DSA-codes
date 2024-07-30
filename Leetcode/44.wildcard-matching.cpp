@@ -1,62 +1,77 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool helper(string s, string p, int i, int j, vector<vector<int>> &dp)
+class Solution
 {
-    // Base case
-
-    if (i < 0 && j < 0)
+private:
+    bool helper(string s, string t, int i, int j, vector<vector<int>> &dp)
     {
-        return true;
-    }
-    if (i >= 0 && j < 0)
-    {
-        return false;
-    }
-    if (i < 0 && j >= 0)
-    {
-        for (int x = 0; x <= j; x++)
+        // Base case
+        if (i == 0 && j == 0)
+            return 1;
+        if (i == 0 && j > 0)
+            return 0;
+        if (i > 0 && j == 0)
         {
-            if (p[x] != '*')
+            for (int idx = 1; idx <= i; idx++)
             {
-                return false;
+                if (s[idx - 1] != '*')
+                {
+                    return 0;
+                }
             }
+            return 1;
         }
-        return true;
+
+        if (dp[i][j] != -1)
+        {
+            return dp[i][j];
+        }
+
+        // Recursion
+
+        if (s[i - 1] == t[j - 1] || s[i - 1] == '?')
+        {
+            return dp[i][j] = helper(s, t, i - 1, j - 1, dp);
+        }
+        if (s[i - 1] == '*')
+        {
+            return dp[i][j] = helper(s, t, i - 1, j, dp) || helper(s, t, i, j - 1, dp);
+        }
+
+        return dp[i][j] = 0;
     }
 
-    if (dp[i][j] != -1)
+public:
+    bool isMatch(string s, string p)
     {
-        return dp[i][j];
+        int n = s.length();
+        int m = p.length();
+
+        vector<vector<bool>> dp(m + 1, vector<bool>(n + 1, false));
+
+        dp[0][0] = 0;
+
+        for (int i = 1; i <= n; i++)
+        {
+            dp[0][i] = false;
+        }
+
+        for (int i = 1; i <= m; i++)
+        {
+            bool flag = true;
+            for (int idx = 1; idx <= i; idx++)
+            {
+                if (s[idx - 1] != '*')
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            dp[i][0] = flag;
+        }
     }
-
-    if (s[i] == p[j] || p[j] == '?')
-    {
-        return dp[i][j] = helper(s, p, i - 1, j - 1, dp);
-    }
-
-    if (p[j] == '*')
-    {
-        return dp[i][j] = helper(s, p, i - 1, j, dp) | helper(s, p, i, j - 1, dp);
-    }
-
-    return dp[i][j] = false;
-}
-
-bool isMatch(string s, string p)
-{
-    int ns = s.length();
-    int np = p.length();
-
-    vector<vector<bool>> dp(ns + 1, vector<bool>(np + 1, false));
-
-    dp[0][0] = false;
-
-    for (int x = 1; x <= np; x++)
-    {
-        dp[0][j] = false;
-    }
-}
+};
 
 int main()
 {
