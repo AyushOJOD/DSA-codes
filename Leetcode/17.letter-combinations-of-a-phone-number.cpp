@@ -32,6 +32,10 @@ vector<string> letterCombinations(string digits)
 
     vector<string> res;
     string temp = "";
+
+    func(digits, mp, 0, res, temp);
+
+    return res;
 }
 
 int main()
