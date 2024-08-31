@@ -11,39 +11,6 @@ using namespace std;
 
 bool isPresent(string s, string t)
 {
-    int target_hash = 0;
-
-    for (int i = 0; i < t.length(); i++)
-    {
-        target_hash += (t[i] - 'a');
-    }
-
-    int source_hash = 0;
-
-    for (int i = 0; i < t.length(); i++)
-    {
-        source_hash += s[i];
-    }
-
-    bool isFound = tr;
-
-    if (source_hash == target_hash)
-    {
-        for (int i = 0; i < t.length(); i++)
-        {
-            if (s[i] != t[i])
-            {
-                break;
-            }
-        }
-
-        return true;
-    }
-
-    for (int i = t.length(); i < s.length(); i++)
-    {
-        source_hash = source_hash - s[i - t.length()] + s[i];
-    }
 }
 
 int main()
