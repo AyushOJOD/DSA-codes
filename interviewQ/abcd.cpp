@@ -1,47 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int getRopesCount(const vector<int> &a, int length)
+string largestMagical(string binString)
 {
-    int count = 0;
-    for (int rope : a)
+    if (binString.empty())
+        return binString;
+    vector<string> substrings;
+    int balanceCount = 0, startIdx = 0;
+    for (int currIdx = 0; currIdx < binString.size(); ++currIdx)
     {
-        count += rope / length;
-    }
-    return count;
-}
-
-int solution(vector<int> &a, int k)
-{
-    int left = 1;
-    int right = *max_element(a.begin(), a.end());
-    int result = 0;
-
-    while (left <= right)
-    {
-        int mid = left + (right - left) / 2;
-
-        if (getRopesCount(a, mid) >= k)
+        balanceCount += binString[currIdx] == '1' ? 1 : -1;
+        if (balanceCount == 0)
         {
-            result = mid;
-            left = mid + 1;
-        }
-        else
-        {
-            right = mid - 1;
+            substrings.push_back("1" + largestMagical(binString.substr(startIdx + 1, currIdx - startIdx - 1)) + "0");
+            startIdx = currIdx + 1;
         }
     }
-
-    return result;
+    sort(substrings.begin(), substrings.end(), greater<string>());
+    return accumulate(substrings.begin(), substrings.end(), string{});
 }
 
 int main()
 {
 
-    vector<int> v = {1, 2, 3, 4, 9};
-    int k = 6;
+    string s;
+    cin >> s;
 
-    cout << solution(v, k);
+    cout << largestMagical(s) << endl;
 
     return 0;
 }

@@ -1,37 +1,41 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int candy(vector<int> &ratings)
+class Solution
 {
-    int n = ratings.size();
-
-    vector<int> candies(n, 1);
-
-    for (int i = 1; i < n; i++)
+public:
+    int candy(vector<int> &ratings)
     {
-        if (ratings[i] > ratings[i - 1])
+        int n = ratings.size();
+
+        vector<int> ans(n, 1);
+
+        for (int i = 1; i < n; i++)
         {
-            candies[i] = candies[i - 1] + 1;
+            if (ratings[i] > ratings[i - 1])
+            {
+                ans[i] = ans[i - 1] + 1;
+            }
         }
-    }
 
-    for (int i = n - 2; i >= 0; i--)
-    {
-        if (ratings[i] > ratings[i - 1])
+        for (int i = n - 2; i >= 0; i--)
         {
-            candies[i] = max(candies[i], candies[i + 1] + 1);
+            if (ratings[i] > ratings[i + 1])
+            {
+                ans[i] = max(ans[i], ans[i + 1] + 1);
+            }
         }
+
+        int res = 0;
+
+        for (int x : ans)
+        {
+            res += x;
+        }
+
+        return res;
     }
-
-    int totalCandies = 0;
-
-    for (int candy : candies)
-    {
-        totalCandies += candy;
-    }
-
-    return totalCandies;
-}
+};
 
 int main()
 {

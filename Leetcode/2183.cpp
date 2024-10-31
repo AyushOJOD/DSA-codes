@@ -4,8 +4,9 @@ using namespace std;
 class Solution
 {
 public:
-    vector<int> findSubstring(string s, vector<string> &words)
+    long long countPairs(vector<int> &nums, int k)
     {
+        
     }
 };
 

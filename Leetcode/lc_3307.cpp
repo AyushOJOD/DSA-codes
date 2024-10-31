@@ -4,7 +4,7 @@ using namespace std;
 class Solution
 {
 public:
-    vector<int> findSubstring(string s, vector<string> &words)
+    char kthCharacter(long long k, vector<int> &operations)
     {
     }
 };

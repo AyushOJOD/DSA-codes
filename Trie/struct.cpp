@@ -15,7 +15,7 @@ TrieNode *getNode()
 {
     TrieNode *newNode = new TrieNode();
 
-    // set the constaints
+    // set the constraints
     newNode->wordEnd = false;
     newNode->word = "";
 

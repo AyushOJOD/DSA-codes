@@ -4,8 +4,10 @@ using namespace std;
 class Solution
 {
 public:
-    vector<int> findSubstring(string s, vector<string> &words)
+    int findTheLongestSubstring(string s)
     {
+        vector<int> bitMap(32, -2);
+        bitMap[0] = -1;
     }
 };
 

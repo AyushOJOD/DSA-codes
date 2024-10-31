@@ -3,8 +3,9 @@ using namespace std;
 
 class Solution
 {
+private:
 public:
-    vector<int> findSubstring(string s, vector<string> &words)
+    int findKthNumber(int n, int k)
     {
     }
 };

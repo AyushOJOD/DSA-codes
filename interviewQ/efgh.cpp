@@ -1,55 +1,90 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <deque>
+#include <vector>
+#include <climits>
+
 using namespace std;
 
-int solve(int i, int x, int y, int z, vector<int> &a, int n, vector<vector<vector<vector<int>>>> &dp)
+// Function to find the minimum of the maximums in all windows of size w
+int min_of_max_sliding_window(const vector<int> &traffic, int w)
 {
-    if (i >= n && x == 0 && y == 0 && z == 0)
-        return 0;
-    if (i >= n)
-        return 1e9;
-    if (dp[i][x][y][z] != -1)
-        return dp[i][x][y][z];
+    deque<int> dq;
+    int n = traffic.size();
+    vector<int> max_in_window;
 
-    int f = 1e9, s = 1e9, t = 1e9;
-    if (x > 0)
+    // Process the first window of size w
+    for (int i = 0; i < w; ++i)
     {
-        f = a[i] + solve(i + 1, x - 1, y, z, a, n, dp);
-    }
-    if (y > 0 && n - i >= 2)
-    {
-        s = a[i] + a[i + 1] + solve(i + 2, x, y - 1, z, a, n, dp);
-    }
-    if (z > 0 && n - i >= 3)
-    {
-        t = a[i] + a[i + 1] + a[i + 2] + solve(i + 3, x, y, z - 1, a, n, dp);
-    }
-    int op = solve(i + 1, x, y, z, a, n, dp);
-
-    return dp[i][x][y][z] = min({f, s, t, op});
-}
-
-int solution(vector<int> arr, int p, int q, int r)
-{
-    int n = arr.size();
-    int sum = 0;
-    for (int i = 0; i < n; i++)
-    {
-        sum += arr[i];
+        // Remove all elements smaller than the current element from the deque
+        while (!dq.empty() && traffic[dq.back()] <= traffic[i])
+        {
+            dq.pop_back();
+        }
+        // Add the current element's index
+        dq.push_back(i);
     }
 
-    vector<vector<vector<vector<int>>>> dp(n + 1,
-                                           vector<vector<vector<int>>>(p + 1,
-                                                                       vector<vector<int>>(q + 1, vector<int>(r + 1, -1))));
+    // Add the max for the first window
+    max_in_window.push_back(traffic[dq.front()]);
 
-    int ans = solve(0, p, q, r, arr, n, dp);
-    return sum - ans;
+    // Process the remaining elements
+    for (int i = w; i < n; ++i)
+    {
+        // Remove elements that are out of this window
+        while (!dq.empty() && dq.front() <= i - w)
+        {
+            dq.pop_front();
+        }
+
+        // Remove all elements smaller than the current element from the deque
+        while (!dq.empty() && traffic[dq.back()] <= traffic[i])
+        {
+            dq.pop_back();
+        }
+
+        // Add the current element's index
+        dq.push_back(i);
+
+        // Add the max for this window
+        max_in_window.push_back(traffic[dq.front()]);
+    }
+
+    // Find and return the minimum of the maximums
+    int min_max = INT_MAX;
+    for (int val : max_in_window)
+    {
+        min_max = min(min_max, val);
+    }
+
+    return min_max;
 }
 
 int main()
 {
+    // Read the full test case at once
+    int n, q;
+    cin >> n >> q;
 
-    vector<int> v = {3, 1, 0, 5, 1, 6, 5, -1, -100};
-    int p
+    vector<int> traffic(n);
+    for (int i = 0; i < n; ++i)
+    {
+        cin >> traffic[i];
+    }
 
-        return 0;
+    // Process each query and print results at once
+    vector<int> results;
+    for (int i = 0; i < q; ++i)
+    {
+        int w;
+        cin >> w;
+        results.push_back(min_of_max_sliding_window(traffic, w));
+    }
+
+    // Output all results in one go
+    for (int result : results)
+    {
+        cout << result << endl;
+    }
+
+    return 0;
 }
