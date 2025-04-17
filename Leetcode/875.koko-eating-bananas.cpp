@@ -3,40 +3,42 @@ using namespace std;
 
 class Solution
 {
-private:
-    int helper(vector<int> &piles, int speed)
+public:
+    bool check(vector<int> &piles, int hours, int mid)
     {
-        int time = 0;
-
+        int ans = 0;
         for (int i = 0; i < piles.size(); i++)
         {
-            time += (piles[i] + speed - 1) / speed;
+            ans += (piles[i] / mid);
+            if (piles[i] / mid != 0)
+            {
+                ans++;
+            }
         }
-
-        return time;
+        return ans <= hours;
     }
 
-public:
     int minEatingSpeed(vector<int> &piles, int h)
     {
-        int left = 1, right = *max_element(piles.begin(), piles.end());
+        int n = piles.size();
+        sort(piles.size(), piles.size());
 
-        while (left < right)
+        int low = 1, high = piles[n - 1];
+
+        while (low < high)
         {
             int mid = left + (right - left) / 2;
-            int time = helper(piles, mid);
-
-            if (time <= h)
+            if (check(piles, h, mid))
             {
-                right = mid;
+                high = mid;
             }
             else
             {
-                left = mid + 1;
+                low = mid + 1;
             }
-
-            return left;
         }
+
+        return low;
     }
 };
 
